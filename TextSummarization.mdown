@@ -1,0 +1,21 @@
+---
+title: "Text Summarization - a summary"
+author: "Marcel Canclini, marcel.canclini@gmail.com"
+date: "30 Juni 2017"
+bibliography: text_summarization.bib
+csl: chicago-author-date-de.csl
+xelatex: true
+fontsize: 11pt
+numbersections: no
+geometry: margin=1.7cm
+---
+
+# Abstract
+
+# Aktueller Stand und Entwicklungen
+
+# Schlussfolgerung
+
+# Referenzen
+
+[Some_Image]: images/some.png "some description"
