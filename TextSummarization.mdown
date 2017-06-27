@@ -1,21 +1,89 @@
 ---
-title: "Text Summarization - a summary"
+title: "Text Summarization - Ein Rück- und Ausblick"
 author: "Marcel Canclini, marcel.canclini@gmail.com"
-date: "30 Juni 2017"
+date: "27 Juni 2017"
 bibliography: text_summarization.bib
 csl: chicago-author-date-de.csl
 xelatex: true
 fontsize: 11pt
 numbersections: no
-geometry: margin=1.7cm
+geometry: margin=2.3cm
 ---
 
-# Abstract
+# Einleitung
+Durch den Computer selbständig erstellte Zusammenfassungen von Text, sei dies aus einem oder aus mehreren Dokumenten, ist ein noch ungelöstes Machine Learning Problem. Dabei liegt es nicht daran, dass nicht geforscht wird, wie in Abbildung \ref{arxiv} zu sehen ist. Die Schwierigkeit liegt vielmehr darin, dass viele einzelne Problemstellungen zusammenkommen wie im ersten Kapitel aufgezeigt wird.
+Qualitativ hochwertige, automatische Zusammenfassungen wären in der aktuellen Zeit von Informationsüberflutung ein willkommenes Geschenk. Nicht nur die Länge von Dokumenten, auch die vielen verschiedenen Quellen mit unterschiedlichem Mehrwert machen das Auffinden und Verarbeiten von Informationen zu einer schwierigen und zeitintensiven Angelegenheit.
 
-# Aktueller Stand und Entwicklungen
+Der Anwendungsbereich ist immens! Sei dies in der Forschung um sich einen Überblick zu verschaffen ohne gleich jedes relevante Paper im Detail zu lesen, oder in der Medizin um schnell eine Übersicht der bereits erfolgten Behandlungen eines Patienten zu bekommen. Dies ist sicher auch ein Grund warum nicht nur die Forschung in diesem Bereich tätig ist, sondern auch grosse Firmen wie Salesforce [@paulus_your_2017], welche sich für ihre CRM Systeme natürlich einiges an Nutzen durch maschinell erfolgte Zusammenfassung eines Kunden erhoffen.
+
+![ungefähre Anzahl eingereichte Papers im Bereich "Text Summarization" in den letzten rund 2.5 Jahren \label{arxiv}][recent_papers_arxiv]
+
+# Problemstellungen
+Warum können Computer Hunde von Katzenbildern unterscheiden oder lernen ein realistisches Gesicht zu zeichnen, aber keine Zusammenfassung eines Textes zu erstellen?
+
+## Abstrakt vs. Extrakt
+Erstellt eine Person eine Zusammenfassung eines Textes, so erstellt er ein Abstrakt, ein neuer Text, welche den Originaltext in einer kurzen, neuen Art wiedergibt.
+Ein Computerprogramm hingegen sucht sich die "wichtigsten" Sätze oder Wörter und gibt diese wieder. Also ein Extrakt aus dem Originaltext.
+
+## Qualität - Im Auge des Betrachters
+Was ist eine gute, oder noch besser, die richtige Zusammenfassung eines Texts? Diese Frage ist leider nicht so einfach zu beantworten, da jede Person eine andere Ansicht davon hat. Gibt man einer Anzahl von Personen (Annotatoren) die Aufgabe einen Text zusammenzufassen, bekommt man sehr viele unterschiedliche Texte. Um einen supervised Learning Ansatz zu verwenden oder die Qualität eines Systems zu bestimmen, braucht es aber einen Gold-Standard von Zusammenfassungen für Texte.
+
+Die Gruppe AIPHES an der TU Darmstadt beschäftigt unter anderem mit diesem Thema und erstellt anhand eines geführten Prozesses mit 7 Schritten kohärente Extrakts von deutschen Texten und stellt diese als Korpus zur Verfügung [@benikova_bridging_2016]. Mit ihrem Prozess konnten sie ein inter-annotator Agreement von ca. 85% erreichen.
+
+## Semantic
+reines Anwenden von Machine Learning im Bereich der Textanalyse basiert fast ausschliesslich auf statistischen Merkmalen. Semantisches und syntaktisches Verständnis von Sprache wäre aber eine grosse Hilfe bei der Erstellung von verständlichen und aussagekräftigen Zusammenfassungen. Dies erschwert wiederum die Anwendung eines einzelnen Algorithmus auf mehrere Sprachen.
+
+# Prozess und Ansätze
+In Automatic Summarising: Factors and Directions [@jones_automatic_1998] wird der grundlegende Prozess zur Generierung von Zusammenfassungen wie folgt beschrieben:
+
+1. source text *interpretation* to source text representation
+2. source representation *transformation* to summary text representation
+3. summary text *generation* from summary representation
+
+Sparck Jones beschreibt diesen Prozess als offensichtlich. Zu beachten sind auch die klaren Datentypen, welche an der Schnittstelle der Prozessschritte verwendet werden. Die Verwendung eines solche generischen Ansatzes erlaubt es nun verschiedene Ansätze miteinander zu vergleichen und den einzelnen Schritten zuzuordnen.
+
+In der Vergangenheit wurden unter anderem folgende Ansätze verwendet.
+Folgende Ansätze wurde und werden verwendet. Es handelt sich hier um eine nicht vollständige Auswahl.
+
+Ein speziell bei News Artikeln schwer zu übertreffender Ansatz ist die Verwendung einer **Baseline**, bei welcher die ersten X Wörter eines Texts verwendet werden.
+
+**Lexical Chaining** verbindet Textfragmente oder Sätze innerhalb eines Dokuments über Nomen, welche einen lexikalischen Zusammenhang haben. Dieser Ansatz kann nur auf einzelne Dokumente angewendet werden, ist aber ein wichtiger Baustein, auf welchem weitere Ansätze aufbauen.
+
+
+**Maximal Marginal Relevance** wählt Sätze aus, welche eine hohe Ähnlichkeit zu bereits gesehenen Sätzen haben. Dies werden als wichtig erachtet. In einer zweiten Phase werden die redundanten Sätze wieder entfernt um eine repräsentatives Extrakt zu bekommen.
+
+**LexRank** [@erkan_lexrank:_2004] ist eine Graphen basierte Variante inspiriert von PageRank. Hierbei wird mittels eines **unsupervised** Ansatzes unter Verwendung des lexikalischen Zentralitätsmasses ein Graph erstellt. LexRank kann auch zur Keyphrase Extraction verwendet werden.
+
+Natürlich gibt es auch verschiedene **supervised Machine Learning** Ansätze. Hierzu braucht es aber für die Trainingsdaten manuell erstellte mögliche Extrakte. die Machine Learning Algorithmen versuchen nun durch Wahl der richtigen Features diese Extrakte nachzustellen.
+
+# Neuronale Netze
+Natürlich dürfen auch im Bereich von Text Summarization die neuronalen Netze nicht fehlen. Neuronale Netze haben in den letzten Jahren in vielen Bereichen des maschinellen Lernens gleiche oder bessere Resultate (AlexNet, [@krizhevsky_imagenet_2012] geliefert wobei eine Verschiebung von Feature Engineering zu Architecture Engineering erfolgt ist. 
+Es war somit nur eine Frage der Zeit bis entsprechende Architekturen von Netzen zur Erstellung von Text Summarization auftauchen.
+
+## Google: Text Summarization with Tensorflow
+2016 hat Google [@liu_text_2016] einen Ansatz vorgestellt, welcher mittels sequence-to-sequence learning Zusammenfassungen von kürzeren Texten automatische lernen kann. Eine sequence-to-sequence Architektur basiert auf zwei Recurrent Neural Networks, welche Sequenzinformationen verarbeiten kann indem der erste Teil den Text liest (Encoder) und der zweite schreibt die Zusammenfassung (Decoder).
+
+Google sieht das Erstellen von Zusammenfassung als interessannte Aufgabenstellung für Computer, da für eine gute Zusammenfassung ein Verständnis für den Text vorhanden sein muss um die relevanten Informationen zu identifizieren. Dies wird umso schwieriger je grösser der Text wird.
+Google hat dazu Tensorflow Code veröffentlicht, welcher Schlagzeilen für News Artikel erstellt. Ein Blick auf die Beispiele zeigt, dass dieses Modell in der Lage ist ein Abstrakt des Texts zu erstellen und nicht nur einen *wichtigen* Satz stellvertretend für den Text als Überschrift setzt.
+
+## Salesforce: Deep Reinforcement Learning
+Im Mai diesen Jahres wurde auch von Salesforce eine Deep Learning Architektur zur Erstellung von Zusammenfassungen veröffentlicht. [@paulus_deep_2017]. Auch dieses System soll in der Lage sein einen Abstrakt des Textes zu erstellen. Gegenüber Google, soll aber der Ansatz von Salesforce nicht nur Überschriften, sondern auch längere, zusammenhängende Texte zu erstellen. 
+
+Wie bei Google wird auch hier eine sequence-to-sequence Architektur verwendet.
+Zusätzlich wird beim Trainieren, im Stil von Reinforcement Learning, eine Feedback Schlaufe eingebaut. Dieses in Abbildung \ref{reinforce} dargestellte Feedback, beurteilt die gesamte Zusammenfassung und liefert so eine Beurteilung an das Model zurück.
+
+![Feedbackloop im Reinforcement Prozess. Der Scorer bewertet nicht nur einzelne Wörter, sondern die gesamte Summary  [@paulus_your_2017 Fig. 7]\label{reinforce}][reinforce_salesfoce]
+
+Da auch die *ground truth* nur eine Interpretation der entsprechenden Annotatoren ist, kann nicht eine exakte Übereinstimmung für den Feedback Loop verwendet werden. Salesforce evaluiert das Resultat mittels ROGUE (Recall-Oriented Understudy for Gisting) [@lin_rouge:_2004]. Dabei werden einzelne Teile der generierten Zusammenfassung mit der Referenzzusammenfassung verglichen. Es muss somit nicht eine perfekte Übereinstimmung vorhanden sein. Je höher diese ist, desto höher ist auch der ROGUE Score. Dies wird mittels des oben erwähnten Reinforcement Prozess an das Model zurückgespielt.
 
 # Schlussfolgerung
+Die von machen als der *heilige Gral* des Machine Learning bezeichnete Text Summarization ist auch heute nur in einfachen Bereichen wie der Zusammenfassung von News Artikeln wirklich brauchbar. Auch wenn mit aktuellen neuronalen Netzarchitekturen erstaunliche Resultate erzielt werden, braucht es noch etwas mehr um im täglichen Gebrauch zum Einsatz zu kommen.
+
+Auch der Bericht über das von Salesforce vorgestellte System kommt zu Schluss, dass sie zwar bessere Resultate als existierende Systeme erzielt haben, aber auch ihr Ansatz nur ein weiterer Schritt in die Richtung automatisierter Zusammenfassung ist. Es braucht unter anderem bessere Metriken zur automatischen Evaluation der Resultate. Eine gute Metrik muss korreliert mit den durch die Annotatoren erstellten Zusammenfassungen im Bezug auf Zusammenhang und Lesbarkeit.
+
+Auch wenn die Resultate in naher Zukunft sicher noch deutlich verbessert werden, wird dies nur auf englischen Texten verwendung finden. Zusammenfassungen für andere Sprachen und über verschiedene Sprachen hinweg ist danach noch eine weitere Hürde welche zu nehmen ist.
 
 # Referenzen
 
-[Some_Image]: images/some.png "some description"
+[recent_papers_arxiv]: images/num_papers_arXiv_since_2015.png "Recent Papers on arXiv"
+[reinforce_salesfoce]: images/Reinforcement_Learning_Salesforce.png "Reinforcement Learning Salesforce"
